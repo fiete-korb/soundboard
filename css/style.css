@@ -1,0 +1,89 @@
+body{
+	background-color: #000;
+}
+
+div#switches{
+	width:670px;
+}
+
+div#tablecontainer {
+	width: 1010px;
+}
+
+div.tablecontainerrow {
+	clear: both;
+}
+
+div#tablecontainer div div.column {
+	width: 160px;
+	float: left;
+	border: 2px solid green;
+	margin: 1px;
+}
+
+.clear{
+	clear: both;
+}
+
+.button {
+	height: 26px;
+	width: 160px;
+	background-color: #ccc;
+	font-size: 13px;
+}
+
+#rnd_container {
+	background: none;
+	margin: 1px;
+}
+
+.rnd_top,.rnd_bottom {
+	display: block;
+	background: none;
+	font-size: 1px;
+}
+
+.rnd_b1,.rnd_b2,.rnd_b3,.rnd_b4 {
+	display: block;
+	overflow: hidden;
+	width: auto;
+}
+
+.rnd_b1,.rnd_b2,.rnd_b3 {
+	height: 1px;
+}
+
+.rnd_b2,.rnd_b3,.rnd_b4 {
+	background: none;
+	border-left: 1px solid #00FF00;
+	border-right: 1px solid #00FF00;
+}
+
+.rnd_b1 {
+	margin: 0 5px;
+	background: #00FF00;
+}
+
+.rnd_b2 {
+	margin: 0 3px;
+	border-width: 0 2px;
+}
+
+.rnd_b3 {
+	margin: 0 2px;
+}
+
+.rnd_b4 {
+	height: 2px;
+	margin: 0 1px;
+}
+
+.rnd_content {
+	display: block;
+	border: 0 solid #00FF00;
+	border-width: 0 1px;
+	padding: 4px;
+	background: none;
+	color: #0f0;
+	width: auto;
+}
