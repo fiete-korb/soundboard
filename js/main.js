@@ -33,7 +33,7 @@ function setBindings()
 
 function playDirect(evt){	
     var file = evt.target.files[0];
-    sendFilePlayformData(file);
+    sendFilePlayformData(file);    
     return false;
 }
 
@@ -41,7 +41,7 @@ function getTabelHtml()
 {
     $.ajax({
 	async:true,
-	url: '/Soundboard/ajax/soundTable.php',  
+	url: 'ajax/soundTable.php',  
 	type: 'GET',
 	dataType: 'json',
 	success:
@@ -58,8 +58,8 @@ function sendFilePlayformData(file)
     formData.append("mp3_file", file);
     
     $.ajax({
-	async:true,
-        url: '/Soundboard/ajax/playSounds.php',  //server script to process data
+	async: false,
+        url: 'ajax/playSounds.php',  //server script to process data
         type: 'POST',
 //        beforeSend: function(){
 //                    	beforeCardSendHandler(this.ajaxcounter, this.ajaxfname);
@@ -79,11 +79,12 @@ function sendformData(data)
     var formData = new FormData();
     formData.append("what", data);
     formData.append("redbutton", false);
-    formData.append("phrase", $('#phrase').val());
+    formData.append("phrase", 	$('#phrase').val());
+    formData.append("tubeUrl", 	$('#tubeUrl').val());
         
     $.ajax({
 	async:true,
-        url: '/Soundboard/ajax/playSounds.php',  //server script to process data
+        url: 'ajax/playSounds.php',  //server script to process data
         type: 'POST',
 //        beforeSend: function(){
 //                    	beforeCardSendHandler(this.ajaxcounter, this.ajaxfname);
@@ -117,7 +118,7 @@ function handleServerVolume(volume,get)
     
     $.ajax({
 	async:true,
-        url: '/Soundboard/ajax/adjustVolume.php',  //server script to process data
+        url: 'ajax/adjustVolume.php',  //server script to process data
         type: 'POST',
 //        beforeSend: function(){
 //                    	beforeCardSendHandler(this.ajaxcounter, this.ajaxfname);

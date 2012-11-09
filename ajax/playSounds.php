@@ -5,12 +5,10 @@ $_SERVER["DOCUMENT_ROOT"] = getcwd().'/..';
 
 ini_set('display_errors', true);
 error_reporting(E_ALL & ~E_DEPRECATED);
-
 require_once ('../lib/connections/db.php');
-
 global $mdb2;
 
-$soundsPath = '/root/sounds/';
+$soundsPath = '../sounds/';
 
 if(isset($_SERVER['argv'][1])){
 	$_SERVER['argv'][1] = utf8_decode($_SERVER['argv'][1]);
@@ -44,7 +42,14 @@ if(isset($_POST['what']))
 		$params 	= array_merge($_POST, $_FILES);
 		$file 		= isset($params['mp3_file']['tmp_name']) ? $params['mp3_file']['tmp_name'] : '';
 		$filename	= isset($params['mp3_file']['name']) ? $params['mp3_file']['name'] : '';
+		
 		playItDirect($file, $filename, $soundsPath);
+	}
+	elseif(false !== stripos($what, 'tubeItNow'))
+	{
+		$params 	= array_merge($_POST, $_FILES);
+		$url 		= isset($params['tubeUrl']) ? $params['tubeUrl'] : '';
+		playUTube($url, $soundsPath);
 	}
 	elseif(false !== stripos($what, 'cleanSayGarbage'))
 	{
@@ -192,27 +197,49 @@ function readIt($phrase, $lang = 'en')
 function playItDirect($file, $filename, $soundsPath)
 {
 	try {
-		ini_set('memory_limit', '100M');
+		ini_set('memory_limit', '256M');
 		$filename = str_replace(' ','',$filename);
-		
+
 		$destination = $soundsPath."upload/".$filename;
-		$substDest = $soundsPath."upload/toplay";
-		
-		print($file);
-		
-		print(move_uploaded_file($file, $destination)?'ja':'nein');
-		
-		//now encode it to ogg
-		$command = 'sudo /usr/bin/ffmpeg -i ' . $destination . ' ' . $substDest.'.wav';
-		exec($command);
-		
-		//and finaly play it
-		$command = 'sudo /usr/bin/play '.$substDest.'.wav' . ' 2>&1 >/dev/null &';
-		proc_close(proc_open($command, array(), $pipes));
+		$substDest = $soundsPath."upload/toplay.wav";
+
+		if(move_uploaded_file($file, $destination))
+		{
+			changeToWaveAndPlay($destination, $substDest);		
+		}
+		else
+		{
+			die( 'bad things happened!');
+		}
 	} catch (Exception $e) {
 		print($e->getMessage());exit;
 	}
-	
+}
+
+function changeToWaveAndPlay($destination, $substDest){
+	//now encode it to ogg
+	unlink($substDest);
+	$command = 'sudo /usr/bin/ffmpeg -i ' . $destination . ' ' . $substDest;
+	$outputArr = null;	
+	exec($command, $outputArr);
+	if(is_array($outputArr)){
+		//and finaly play it
+		$command = 'sudo /usr/bin/play '.$substDest . ' 2>&1 >/dev/null &';
+		proc_close(proc_open($command, array(), $pipes));
+	}
+}
+
+function playUTube($url, $soundsPath)
+{
+	$outputArr = null;
+	$substDest = $soundsPath."youtube/toplay.wav";
+	$command = 'sudo ../sh/convert.sh '.$url;
+	exec($command, $outputArr);
+	if(is_array($outputArr))
+	{
+		$relPath = str_replace('/var/www/Soundboard', '..', $outputArr[0]);
+		changeToWaveAndPlay($relPath, $substDest);
+	}
 }
 
 function pr($t)
